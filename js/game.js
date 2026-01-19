@@ -59,7 +59,7 @@ function handleCellClick(cell) {
         const from = selectedCell;
         const to = { row, col };
 
-        if (isValidPawnMove(from, to)) {
+        if (isValidMove(from, to)) {
             movePiece(from, to);
             clearSelection();
             switchPlayer();
@@ -130,5 +130,52 @@ function isOpponentPiece(piece, target) {
         ? target === target.toLowerCase()
         : target === target.toUpperCase();
 }
+
+function isValidMove(from, to) {
+    const piece = boardState[from.row][from.col];
+    if (!piece) return false;
+
+    const type = piece.toLowerCase();
+
+    if (type === "p") return isValidPawnMove(from, to);
+    if (type === "r") return isValidRookMove(from, to);
+    if (type === "n") return isValidKnightMove(from, to);
+
+    return false;
+}
+
+function isValidRookMove(from, to) {
+    if (from.row !== to.row && from.col !== to.col) return false;
+
+    const piece = boardState[from.row][from.col];
+    const target = boardState[to.row][to.col];
+    if (target && !isOpponentPiece(piece, target)) return false;
+
+    const rowStep = Math.sign(to.row - from.row);
+    const colStep = Math.sign(to.col - from.col);
+
+    let r = from.row + rowStep;
+    let c = from.col + colStep;
+
+    while (r !== to.row || c !== to.col) {
+        if (boardState[r][c] !== null) return false;
+        r += rowStep;
+        c += colStep;
+    }
+
+    return true;
+}
+
+function isValidKnightMove(from, to) {
+    const piece = boardState[from.row][from.col];
+    const target = boardState[to.row][to.col];
+    if (target && !isOpponentPiece(piece, target)) return false;
+
+    const dr = Math.abs(from.row - to.row);
+    const dc = Math.abs(from.col - to.col);
+
+    return (dr === 2 && dc === 1) || (dr === 1 && dc === 2);
+}
+
 
 
