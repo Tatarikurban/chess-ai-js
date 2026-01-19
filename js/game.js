@@ -79,13 +79,12 @@ function isValidPawnMove(from, to) {
 
     const direction = piece === "P" ? -1 : 1;
     const startRow = piece === "P" ? 6 : 1;
+    const target = boardState[to.row][to.col];
 
-    // ход вперёд
-    if (
-        from.col === to.col &&
-        boardState[to.row][to.col] === null
-    ) {
+    // обычный ход вперёд
+    if (from.col === to.col && target === null) {
         if (to.row === from.row + direction) return true;
+
         if (
             from.row === startRow &&
             to.row === from.row + 2 * direction &&
@@ -93,8 +92,19 @@ function isValidPawnMove(from, to) {
         ) return true;
     }
 
+    // ВЗЯТИЕ ПО ДИАГОНАЛИ
+    if (
+        Math.abs(from.col - to.col) === 1 &&
+        to.row === from.row + direction &&
+        target !== null &&
+        isOpponentPiece(piece, target)
+    ) {
+        return true;
+    }
+
     return false;
 }
+
 
 function movePiece(from, to) {
     boardState[to.row][to.col] = boardState[from.row][from.col];
