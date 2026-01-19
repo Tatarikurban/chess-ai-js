@@ -20,3 +20,4 @@ function createBoard() {
 }
 
 createBoard();
+renderPieces();
