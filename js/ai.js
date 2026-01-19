@@ -1,3 +1,4 @@
+if (gameOver) return;
 function makeAIMove() {
     const moves = [];
 
