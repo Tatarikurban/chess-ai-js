@@ -21,3 +21,8 @@ function createBoard() {
 
 createBoard();
 renderPieces();
+
+boardElement.addEventListener("click", (e) => {
+    if (!e.target.classList.contains("cell")) return;
+    handleCellClick(e.target);
+});
