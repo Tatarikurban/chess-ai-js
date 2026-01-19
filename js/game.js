@@ -1,3 +1,4 @@
+let gameOver = false;
 const EMPTY = null;
 
 // Заглавные — белые, строчные — чёрные
@@ -43,6 +44,7 @@ function renderPieces() {
 renderPieces();
 
 function handleCellClick(cell) {
+    if (gameOver) return;
     const row = parseInt(cell.dataset.row);
     const col = parseInt(cell.dataset.col);
     const piece = boardState[row][col];
@@ -107,6 +109,16 @@ function isValidPawnMove(from, to) {
 
 
 function movePiece(from, to) {
+    const target = boardState[to.row][to.col];
+    if (target && target.toLowerCase() === "k") {
+        gameOver = true;
+        alert(
+            target === "k"
+                ? "Белые победили!"
+                : "Чёрные победили!"
+        );
+    }
+
     boardState[to.row][to.col] = boardState[from.row][from.col];
     boardState[from.row][from.col] = null;
     renderPieces();
@@ -142,6 +154,7 @@ function isValidMove(from, to) {
     if (type === "n") return isValidKnightMove(from, to);
     if (type === "b") return isValidBishopMove(from, to);
     if (type === "q") return isValidQueenMove(from, to);
+    if (type === "k") return isValidKingMove(from, to);
 
     return false;
 }
@@ -205,6 +218,17 @@ function isValidBishopMove(from, to) {
 
 function isValidQueenMove(from, to) {
     return isValidRookMove(from, to) || isValidBishopMove(from, to);
+}
+
+function isValidKingMove(from, to) {
+    const piece = boardState[from.row][from.col];
+    const target = boardState[to.row][to.col];
+    if (target && !isOpponentPiece(piece, target)) return false;
+
+    const dr = Math.abs(from.row - to.row);
+    const dc = Math.abs(from.col - to.col);
+
+    return dr <= 1 && dc <= 1;
 }
 
 
