@@ -41,3 +41,29 @@ function renderPieces() {
 }
 
 renderPieces();
+
+function handleCellClick(cell) {
+    const row = parseInt(cell.dataset.row);
+    const col = parseInt(cell.dataset.col);
+    const piece = boardState[row][col];
+
+    // Выбор фигуры
+    if (!selectedCell && piece && isCurrentPlayerPiece(piece)) {
+        selectedCell = { row, col };
+        cell.style.outline = "2px solid red";
+        return;
+    }
+
+    // Ход
+    if (selectedCell) {
+        const from = selectedCell;
+        const to = { row, col };
+
+        if (isValidPawnMove(from, to)) {
+            movePiece(from, to);
+            clearSelection();
+            switchPlayer();
+        }
+    }
+}
+
