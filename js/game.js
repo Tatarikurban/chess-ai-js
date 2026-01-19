@@ -12,6 +12,9 @@ let boardState = [
     ["R", "N", "B", "Q", "K", "B", "N", "R"]
 ];
 
+let selectedCell = null;
+let currentPlayer = "white"; // white / black
+
 const PIECES = {
     "P": "♙",
     "R": "♖",
