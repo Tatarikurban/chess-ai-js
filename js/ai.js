@@ -1,5 +1,5 @@
-if (gameOver) return;
 function makeAIMove() {
+    if (gameOver) return;
     const moves = [];
 
     for (let r = 0; r < 8; r++) {
