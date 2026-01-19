@@ -51,8 +51,11 @@ function handleCellClick(cell) {
 
     // Выбор фигуры
     if (!selectedCell && piece && isCurrentPlayerPiece(piece)) {
+        clearHighlights();
         selectedCell = { row, col };
-        cell.style.outline = "2px solid red";
+        cell.classList.add("selected");
+        highlightPossibleMoves(selectedCell);
+
         return;
     }
 
@@ -125,7 +128,7 @@ function movePiece(from, to) {
 }
 
 function clearSelection() {
-    document.querySelectorAll(".cell").forEach(c => c.style.outline = "");
+    clearHighlights();
     selectedCell = null;
 }
 
@@ -231,4 +234,25 @@ function isValidKingMove(from, to) {
     return dr <= 1 && dc <= 1;
 }
 
+function highlightPossibleMoves(from) {
+    clearHighlights();
+
+    for (let row = 0; row < 8; row++) {
+        for (let col = 0; col < 8; col++) {
+            const to = { row, col };
+            if (isValidMove(from, to)) {
+                const cell = document.querySelector(
+                    `.cell[data-row="${row}"][data-col="${col}"]`
+                );
+                cell.classList.add("possible-move");
+            }
+        }
+    }
+}
+
+function clearHighlights() {
+    document.querySelectorAll(".cell").forEach(cell => {
+        cell.classList.remove("possible-move", "selected");
+    });
+}
 
