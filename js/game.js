@@ -109,5 +109,10 @@ function clearSelection() {
 
 function switchPlayer() {
     currentPlayer = currentPlayer === "white" ? "black" : "white";
+    
+    if (currentPlayer === "black") {
+        setTimeout(makeAIMove, 500);
+    }
 }
+
 
