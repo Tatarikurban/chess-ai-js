@@ -125,4 +125,10 @@ function switchPlayer() {
     }
 }
 
+function isOpponentPiece(piece, target) {
+    return piece === piece.toUpperCase()
+        ? target === target.toLowerCase()
+        : target === target.toUpperCase();
+}
+
 
