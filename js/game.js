@@ -140,6 +140,8 @@ function isValidMove(from, to) {
     if (type === "p") return isValidPawnMove(from, to);
     if (type === "r") return isValidRookMove(from, to);
     if (type === "n") return isValidKnightMove(from, to);
+    if (type === "b") return isValidBishopMove(from, to);
+    if (type === "q") return isValidQueenMove(from, to);
 
     return false;
 }
@@ -177,5 +179,32 @@ function isValidKnightMove(from, to) {
     return (dr === 2 && dc === 1) || (dr === 1 && dc === 2);
 }
 
+function isValidBishopMove(from, to) {
+    const dr = Math.abs(from.row - to.row);
+    const dc = Math.abs(from.col - to.col);
+    if (dr !== dc) return false;
+
+    const piece = boardState[from.row][from.col];
+    const target = boardState[to.row][to.col];
+    if (target && !isOpponentPiece(piece, target)) return false;
+
+    const rowStep = Math.sign(to.row - from.row);
+    const colStep = Math.sign(to.col - from.col);
+
+    let r = from.row + rowStep;
+    let c = from.col + colStep;
+
+    while (r !== to.row && c !== to.col) {
+        if (boardState[r][c] !== null) return false;
+        r += rowStep;
+        c += colStep;
+    }
+
+    return true;
+}
+
+function isValidQueenMove(from, to) {
+    return isValidRookMove(from, to) || isValidBishopMove(from, to);
+}
 
 
