@@ -29,3 +29,12 @@ body {
 .black {
     background-color: #b58863;
 }
+
+.selected {
+    outline: 2px solid red;
+}
+
+.possible-move {
+    background-color: rgba(0, 255, 0, 0.4);
+}
+
