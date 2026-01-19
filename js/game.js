@@ -96,3 +96,18 @@ function isValidPawnMove(from, to) {
     return false;
 }
 
+function movePiece(from, to) {
+    boardState[to.row][to.col] = boardState[from.row][from.col];
+    boardState[from.row][from.col] = null;
+    renderPieces();
+}
+
+function clearSelection() {
+    document.querySelectorAll(".cell").forEach(c => c.style.outline = "");
+    selectedCell = null;
+}
+
+function switchPlayer() {
+    currentPlayer = currentPlayer === "white" ? "black" : "white";
+}
+
