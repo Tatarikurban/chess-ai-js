@@ -67,3 +67,32 @@ function handleCellClick(cell) {
     }
 }
 
+function isCurrentPlayerPiece(piece) {
+    return currentPlayer === "white"
+        ? piece === piece.toUpperCase()
+        : piece === piece.toLowerCase();
+}
+
+function isValidPawnMove(from, to) {
+    const piece = boardState[from.row][from.col];
+    if (!piece) return false;
+
+    const direction = piece === "P" ? -1 : 1;
+    const startRow = piece === "P" ? 6 : 1;
+
+    // ход вперёд
+    if (
+        from.col === to.col &&
+        boardState[to.row][to.col] === null
+    ) {
+        if (to.row === from.row + direction) return true;
+        if (
+            from.row === startRow &&
+            to.row === from.row + 2 * direction &&
+            boardState[from.row + direction][from.col] === null
+        ) return true;
+    }
+
+    return false;
+}
+
