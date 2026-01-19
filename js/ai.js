@@ -1,25 +1,19 @@
 function makeAIMove() {
     const moves = [];
 
-    for (let row = 0; row < 8; row++) {
-        for (let col = 0; col < 8; col++) {
-            if (boardState[row][col] === "p") {
-                const from = { row, col };
+    for (let r = 0; r < 8; r++) {
+        for (let c = 0; c < 8; c++) {
+            const piece = boardState[r][c];
+            if (!piece || piece !== piece.toLowerCase()) continue;
 
-                const forward = { row: row + 1, col };
-                if (isValidPawnMove(from, forward)) {
-                    moves.push({ from, to: forward });
-                }
+            for (let tr = 0; tr < 8; tr++) {
+                for (let tc = 0; tc < 8; tc++) {
+                    const from = { row: r, col: c };
+                    const to = { row: tr, col: tc };
 
-                const leftCapture = { row: row + 1, col: col - 1 };
-                const rightCapture = { row: row + 1, col: col + 1 };
-
-                if (leftCapture.col >= 0 && isValidPawnMove(from, leftCapture)) {
-                    moves.push({ from, to: leftCapture });
-                }
-
-                if (rightCapture.col < 8 && isValidPawnMove(from, rightCapture)) {
-                    moves.push({ from, to: rightCapture });
+                    if (isValidMove(from, to)) {
+                        moves.push({ from, to });
+                    }
                 }
             }
         }
@@ -31,5 +25,6 @@ function makeAIMove() {
     movePiece(move.from, move.to);
     switchPlayer();
 }
+
 
 
