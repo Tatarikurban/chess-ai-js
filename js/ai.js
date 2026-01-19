@@ -32,10 +32,3 @@ function makeAIMove() {
     switchPlayer();
 }
 
-
-    if (moves.length === 0) return;
-
-    const move = moves[Math.floor(Math.random() * moves.length)];
-    movePiece(move.from, move.to);
-    switchPlayer();
-}
