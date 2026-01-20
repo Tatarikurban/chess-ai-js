@@ -2,16 +2,41 @@ let gameOver = false;
 const EMPTY = null;
 
 // Заглавные — белые, строчные — чёрные
-let boardState = [
-    ["r", "n", "b", "q", "k", "b", "n", "r"],
-    ["p", "p", "p", "p", "p", "p", "p", "p"],
+const initialBoard = [
+    ["r","n","b","q","k","b","n","r"],
+    ["p","p","p","p","p","p","p","p"],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-    ["P", "P", "P", "P", "P", "P", "P", "P"],
-    ["R", "N", "B", "Q", "K", "B", "N", "R"]
+    ["P","P","P","P","P","P","P","P"],
+    ["R","N","B","Q","K","B","N","R"]
 ];
+
+let boardState = JSON.parse(JSON.stringify(initialBoard));
+
+function renderBoard() {
+    const board = document.getElementById("board");
+    board.innerHTML = ""; 
+
+    for (let row = 0; row < 8; row++) {
+        for (let col = 0; col < 8; col++) {
+            const cell = document.createElement("div");
+            cell.classList.add("cell");
+            if ((row + col) % 2 === 0) {
+                cell.classList.add("white");
+            } else {
+                cell.classList.add("black");
+            }
+
+            cell.dataset.row = row;
+            cell.dataset.col = col;
+            cell.addEventListener("click", handleCellClick);
+
+            board.appendChild(cell);
+        }
+    }
+}
 
 let selectedCell = null;
 let currentPlayer = "white"; // white / black
