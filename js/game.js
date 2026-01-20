@@ -90,7 +90,6 @@ function handleCellClick(cell) {
         const to = { row, col };
 
         if (isValidMove(from, to)) {
-            if (wouldLeaveKingInCheck(from, to)) return false;
             movePiece(from, to);
             clearSelection();
             switchPlayer();
@@ -183,6 +182,7 @@ function isOpponentPiece(piece, target) {
 }
 
 function isValidMove(from, to) {
+    if (wouldLeaveKingInCheck(from, to)) return false;
     const piece = boardState[from.row][from.col];
     if (!piece) return false;
 
