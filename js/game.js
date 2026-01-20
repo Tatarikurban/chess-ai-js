@@ -90,6 +90,7 @@ function handleCellClick(cell) {
         const to = { row, col };
 
         if (isValidMove(from, to)) {
+            if (wouldLeaveKingInCheck(from, to)) return false;
             movePiece(from, to);
             clearSelection();
             switchPlayer();
@@ -138,6 +139,16 @@ function isValidPawnMove(from, to) {
 
 function movePiece(from, to) {
     const target = boardState[to.row][to.col];
+    const opponentIsWhite = boardState[to.row][to.col] === boardState[to.row][to.col]?.toLowerCase();
+    if (isKingInCheck(opponentIsWhite)) {
+        if (!hasAnyLegalMove(opponentIsWhite)) {
+            gameOver = true;
+            alert("Мат!");
+        } else {
+            alert("Шах!");
+        }
+    }
+
     if (target && target.toLowerCase() === "k") {
         gameOver = true;
         alert(
@@ -292,3 +303,73 @@ function restartGame() {
 document
     .getElementById("restartBtn")
     .addEventListener("click", restartGame);
+
+function findKing(isWhite) {
+    const king = isWhite ? "K" : "k";
+    for (let r = 0; r < 8; r++) {
+        for (let c = 0; c < 8; c++) {
+            if (boardState[r][c] === king) {
+                return { row: r, col: c };
+            }
+        }
+    }
+    return null;
+}
+
+function isKingInCheck(isWhite) {
+    const kingPos = findKing(isWhite);
+    if (!kingPos) return false;
+
+    for (let r = 0; r < 8; r++) {
+        for (let c = 0; c < 8; c++) {
+            const piece = boardState[r][c];
+            if (!piece) continue;
+
+            if (isOpponentPiece(
+                isWhite ? "K" : "k",
+                piece
+            )) {
+                if (isValidMove({ row: r, col: c }, kingPos)) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+function wouldLeaveKingInCheck(from, to) {
+    const piece = boardState[from.row][from.col];
+    const captured = boardState[to.row][to.col];
+
+    boardState[to.row][to.col] = piece;
+    boardState[from.row][from.col] = null;
+
+    const isWhite = piece === piece.toUpperCase();
+    const inCheck = isKingInCheck(isWhite);
+
+    boardState[from.row][from.col] = piece;
+    boardState[to.row][to.col] = captured;
+
+    return inCheck;
+}
+
+function hasAnyLegalMove(isWhite) {
+    for (let r1 = 0; r1 < 8; r1++) {
+        for (let c1 = 0; c1 < 8; c1++) {
+            const piece = boardState[r1][c1];
+            if (!piece) continue;
+
+            if ((piece === piece.toUpperCase()) !== isWhite) continue;
+
+            for (let r2 = 0; r2 < 8; r2++) {
+                for (let c2 = 0; c2 < 8; c2++) {
+                    if (isValidMove({ row: r1, col: c1 }, { row: r2, col: c2 })) {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
