@@ -256,3 +256,14 @@ function clearHighlights() {
     });
 }
 
+function restartGame() {
+    boardState = JSON.parse(JSON.stringify(initialBoard));
+    selectedCell = null;
+    gameOver = false;
+    renderBoard();
+    renderPieces();
+}
+
+document
+    .getElementById("restartBtn")
+    .addEventListener("click", restartGame);
