@@ -1,4 +1,5 @@
 let gameOver = false;
+let gameStatus = "";
 const EMPTY = null;
 
 // Заглавные — белые, строчные — чёрные
@@ -137,28 +138,36 @@ function isValidPawnMove(from, to) {
 
 
 function movePiece(from, to) {
-    const piece = boardState[from.row][from.col];
     const target = boardState[to.row][to.col];
 
-    // Делаем ход
-    boardState[to.row][to.col] = piece;
+    // делаем ход
+    boardState[to.row][to.col] = boardState[from.row][from.col];
     boardState[from.row][from.col] = null;
 
-    renderPieces();
+    const opponentIsWhite =
+        boardState[to.row][to.col] === boardState[to.row][to.col]?.toUpperCase();
 
-    // Определяем сторону противника
-    const movedIsWhite = piece === piece.toUpperCase();
-    const opponentIsWhite = !movedIsWhite;
-
-    // Проверка шаха / мата
     if (isKingInCheck(opponentIsWhite)) {
         if (!hasAnyLegalMove(opponentIsWhite)) {
             gameOver = true;
-            alert("Мат!");
+            gameStatus = "Мат";
         } else {
-            alert("Шах!");
+            gameStatus = "Шах";
         }
+    } else {
+        gameStatus = "";
     }
+
+    if (target && target.toLowerCase() === "k") {
+        gameOver = true;
+        gameStatus =
+            target === "k"
+                ? "Белые победили!"
+                : "Чёрные победили!";
+    }
+
+    renderPieces();
+    renderStatus();
 }
 function clearSelection() {
     clearHighlights();
