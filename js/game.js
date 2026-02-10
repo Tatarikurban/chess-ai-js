@@ -418,3 +418,7 @@ function hasAnyLegalMove(isWhite) {
     return false;
 }
 
+function renderStatus() {
+    const statusEl = document.getElementById("status");
+    statusEl.textContent = gameStatus;
+}
