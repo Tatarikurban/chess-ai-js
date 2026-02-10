@@ -29,3 +29,18 @@ body {
 .black {
     background-color: #b58863;
 }
+
+.selected {
+    outline: 2px solid red;
+}
+
+.possible-move {
+    background-color: rgba(0, 255, 0, 0.4);
+}
+
+#restartBtn {
+    margin-top: 15px;
+    padding: 8px 16px;
+    font-size: 16px;
+    cursor: pointer;
+}
