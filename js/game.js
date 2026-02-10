@@ -137,8 +137,20 @@ function isValidPawnMove(from, to) {
 
 
 function movePiece(from, to) {
+    const piece = boardState[from.row][from.col];
     const target = boardState[to.row][to.col];
-    const opponentIsWhite = boardState[to.row][to.col] === boardState[to.row][to.col]?.toLowerCase();
+
+    // Делаем ход
+    boardState[to.row][to.col] = piece;
+    boardState[from.row][from.col] = null;
+
+    renderPieces();
+
+    // Определяем сторону противника
+    const movedIsWhite = piece === piece.toUpperCase();
+    const opponentIsWhite = !movedIsWhite;
+
+    // Проверка шаха / мата
     if (isKingInCheck(opponentIsWhite)) {
         if (!hasAnyLegalMove(opponentIsWhite)) {
             gameOver = true;
@@ -147,21 +159,7 @@ function movePiece(from, to) {
             alert("Шах!");
         }
     }
-
-    if (target && target.toLowerCase() === "k") {
-        gameOver = true;
-        alert(
-            target === "k"
-                ? "Белые победили!"
-                : "Чёрные победили!"
-        );
-    }
-
-    boardState[to.row][to.col] = boardState[from.row][from.col];
-    boardState[from.row][from.col] = null;
-    renderPieces();
 }
-
 function clearSelection() {
     clearHighlights();
     selectedCell = null;
@@ -373,3 +371,41 @@ function hasAnyLegalMove(isWhite) {
     }
     return false;
 }
+
+function hasAnyLegalMove(isWhite) {
+    for (let fromRow = 0; fromRow < 8; fromRow++) {
+        for (let fromCol = 0; fromCol < 8; fromCol++) {
+            const piece = boardState[fromRow][fromCol];
+            if (!piece) continue;
+
+            // фигура не этой стороны
+            if ((piece === piece.toUpperCase()) !== isWhite) continue;
+
+            for (let toRow = 0; toRow < 8; toRow++) {
+                for (let toCol = 0; toCol < 8; toCol++) {
+                    const from = { row: fromRow, col: fromCol };
+                    const to = { row: toRow, col: toCol };
+
+                    if (!isValidMove(from, to)) continue;
+
+                    // временно делаем ход
+                    const captured = boardState[toRow][toCol];
+                    boardState[toRow][toCol] = piece;
+                    boardState[fromRow][fromCol] = null;
+
+                    const stillInCheck = isKingInCheck(isWhite);
+
+                    // откат
+                    boardState[fromRow][fromCol] = piece;
+                    boardState[toRow][toCol] = captured;
+
+                    if (!stillInCheck) {
+                        return true; // нашли спасительный ход
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+
