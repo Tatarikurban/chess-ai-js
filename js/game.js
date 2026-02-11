@@ -144,8 +144,9 @@ function movePiece(from, to) {
     boardState[to.row][to.col] = boardState[from.row][from.col];
     boardState[from.row][from.col] = null;
 
-    const opponentIsWhite =
-        boardState[to.row][to.col] === boardState[to.row][to.col]?.toUpperCase();
+    const movedPiece = boardState[to.row][to.col];
+    const movedPieceIsWhite = movedPiece === movedPiece.toUpperCase();
+    const opponentIsWhite = !movedPieceIsWhite;
 
     if (isKingInCheck(opponentIsWhite)) {
         if (!hasAnyLegalMove(opponentIsWhite)) {
