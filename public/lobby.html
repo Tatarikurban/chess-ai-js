@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Лобби</title>
+</head>
+<body>
+
+<h2>Лобби</h2>
+<p id="user"></p>
+
+<button id="createGame">Создать игру</button>
+
+<ul id="games"></ul>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const username = localStorage.getItem("username");
+    if (!username) {
+        window.location.href = "/";
+    }
+
+    document.getElementById("user").textContent = "Вы: " + username;
+
+    const socket = io();
+
+    socket.on("connect", () => {
+    console.log("Socket подключён:", socket.id);
+    });
+
+    document.getElementById("createGame").onclick = () => {
+        console.log("Нажата кнопка создать игру");
+        socket.emit("create_game");
+    };
+
+    socket.on("game_created", (gameId) => {
+        window.location.href = "game.html?game=" + gameId;
+    });
+</script>
+
+</body>
+</html>
