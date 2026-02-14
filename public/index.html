@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Шахматы онлайн</title>
+</head>
+<body>
+
+<h1>Шахматы онлайн</h1>
+
+<input id="username" placeholder="Введите ник" />
+<button id="loginBtn">Войти</button>
+
+<script>
+    document.getElementById("loginBtn").onclick = () => {
+        const name = document.getElementById("username").value.trim();
+        if (!name) return alert("Введите ник");
+
+        localStorage.setItem("username", name);
+        window.location.href = "lobby.html";
+    };
+</script>
+
+</body>
+</html>

@@ -1,5 +1,15 @@
 let gameOver = false;
 let gameStatus = "";
+
+let whiteKingMoved = false;
+let blackKingMoved = false;
+
+let whiteRookLeftMoved = false;
+let whiteRookRightMoved = false;
+
+let blackRookLeftMoved = false;
+let blackRookRightMoved = false;
+
 const EMPTY = null;
 
 // Заглавные — белые, строчные — чёрные
@@ -138,13 +148,78 @@ function isValidPawnMove(from, to) {
 
 function movePiece(from, to) {
     const target = boardState[to.row][to.col];
+    const piece = boardState[from.row][from.col];
+
+    // рокировка белых
+    if (piece === "K" && from.row === 7 && from.col === 4) {
+        // короткая
+        if (to.row === 7 && to.col === 6 && !whiteKingMoved && !whiteRookRightMoved) {
+            boardState[7][6] = "K";
+            boardState[7][5] = "R";
+            boardState[7][4] = null;
+            boardState[7][7] = null;
+            whiteKingMoved = true;
+            whiteRookRightMoved = true;
+            renderPieces();
+            return;
+        }
+
+        // длинная
+        if (to.row === 7 && to.col === 2 && !whiteKingMoved && !whiteRookLeftMoved) {
+            boardState[7][2] = "K";
+            boardState[7][3] = "R";
+            boardState[7][4] = null;
+            boardState[7][0] = null;
+            whiteKingMoved = true;
+            whiteRookLeftMoved = true;
+            renderPieces();
+            return;
+        }
+    }
+
+    // рокировка чёрных
+    if (piece === "k" && from.row === 0 && from.col === 4) {
+        if (to.row === 0 && to.col === 6 && !blackKingMoved && !blackRookRightMoved) {
+            boardState[0][6] = "k";
+            boardState[0][5] = "r";
+            boardState[0][4] = null;
+            boardState[0][7] = null;
+            blackKingMoved = true;
+            blackRookRightMoved = true;
+            renderPieces();
+            return;
+        }
+
+        if (to.row === 0 && to.col === 2 && !blackKingMoved && !blackRookLeftMoved) {
+            boardState[0][2] = "k";
+            boardState[0][3] = "r";
+            boardState[0][4] = null;
+            boardState[0][0] = null;
+            blackKingMoved = true;
+            blackRookLeftMoved = true;
+            renderPieces();
+            return;
+        }
+    }
 
     // делаем ход
     boardState[to.row][to.col] = boardState[from.row][from.col];
     boardState[from.row][from.col] = null;
 
-    const opponentIsWhite =
-        boardState[to.row][to.col] === boardState[to.row][to.col]?.toUpperCase();
+    if (piece === "K") whiteKingMoved = true;
+    if (piece === "k") blackKingMoved = true;
+
+    if (from.row === 7 && from.col === 0) whiteRookLeftMoved = true;
+    if (from.row === 7 && from.col === 7) whiteRookRightMoved = true;
+
+    if (from.row === 0 && from.col === 0) blackRookLeftMoved = true;
+    if (from.row === 0 && from.col === 7) blackRookRightMoved = true;
+
+
+    const movedPiece = boardState[to.row][to.col];
+    const movedPieceIsWhite = movedPiece === movedPiece.toUpperCase();
+    const opponentIsWhite = !movedPieceIsWhite;
+
 
     if (isKingInCheck(opponentIsWhite)) {
         if (!hasAnyLegalMove(opponentIsWhite)) {
@@ -167,6 +242,9 @@ function movePiece(from, to) {
 
     renderPieces();
     renderStatus();
+    //if (!gameOver) {
+    //switchPlayer();}
+
 }
 
 
@@ -418,4 +496,9 @@ function hasAnyLegalMove(isWhite) {
         }
     }
     return false;
+}
+
+function renderStatus() {
+    const statusEl = document.getElementById("status");
+    statusEl.textContent = gameStatus;
 }

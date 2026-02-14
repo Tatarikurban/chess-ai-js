@@ -1,0 +1,24 @@
+{
+  "name": "chess-ai",
+  "version": "1.0.0",
+  "description": "Учебный проект по дисциплине \"Методы программирования\".",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tatarikurban/chess-ai-js.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tatarikurban/chess-ai-js/issues"
+  },
+  "homepage": "https://github.com/Tatarikurban/chess-ai-js#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "socket.io": "^4.8.3"
+  }
+}
