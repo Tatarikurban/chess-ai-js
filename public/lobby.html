@@ -28,14 +28,40 @@
     console.log("Socket подключён:", socket.id);
     });
 
+    // Создание игры. Сервер вернёт gameId в событии "game_created".
     document.getElementById("createGame").onclick = () => {
         console.log("Нажата кнопка создать игру");
         socket.emit("create_game");
     };
 
+    // Создана игра — запоминаем, что мы создатель, и переходим на game.html
     socket.on("game_created", (gameId) => {
+        localStorage.setItem("createdGameId", gameId);
         window.location.href = "game.html?game=" + gameId;
     });
+
+    const gamesList = document.getElementById("games");
+
+    // Обновление списка доступных игр
+    socket.on("games_list", (games) => {
+        gamesList.innerHTML = "";
+
+        games.forEach((gameId) => {
+            const li = document.createElement("li");
+            li.textContent = gameId;
+
+            const btn = document.createElement("button");
+            btn.textContent = "Присоединиться";
+            btn.onclick = () => {
+                // Просто переходим на страницу игры, join_game будет вызван уже там
+                window.location.href = "game.html?game=" + gameId;
+            };
+
+            li.appendChild(btn);
+            gamesList.appendChild(li);
+        });
+    });
+
 </script>
 
 </body>
