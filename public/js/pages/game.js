@@ -399,3 +399,4 @@ socket.on("move_made", ({ from, to, turn }) => {
     renderStatus();
 });
 
+
