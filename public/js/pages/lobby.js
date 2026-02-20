@@ -57,3 +57,4 @@ if (document.readyState === "loading") {
   initLobbyPage();
 }
 
+
